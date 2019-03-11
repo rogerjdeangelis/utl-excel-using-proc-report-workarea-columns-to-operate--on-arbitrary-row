@@ -221,7 +221,7 @@ Obs    WRKCOL    WRKCOL2  SEX    AGE    HEIGHT    WEIGHT
 */                                                                                                                                   
                                                                                                                                      
                                                                                                                                      
-ods excel file="d:/xls/class.xlsx";                                                                                                  
+ods excel file="d:/xls/class3.xlsx";                                                                                                  
 ods excel options ( sheet_name = "CLASSREPORT");                                                                                     
                                                                                                                                      
 proc report data=clsFix nowd missing;                                                                                                
