@@ -172,71 +172,57 @@ run;quit;
                                                                                                                                      
 ods excel close;                                                                                                                     
                                                                                                                                      
-                                                                                                                                     
-                                                                                                                                     
-*               _         _       _            _                                                                                     
- ___  ___  _ __| |_    __| | __ _| |_ __ _ ___| |_ ___ _ __                                                                          
-/ __|/ _ \| '__| __|  / _` |/ _` | __/ _` / __| __/ _ \ '_ \                                                                         
-\__ \ (_) | |  | |_  | (_| | (_| | || (_| \__ \ ||  __/ |_) |                                                                        
-|___/\___/|_|   \__|  \__,_|\__,_|\__\__,_|___/\__\___| .__/                                                                         
-                                                      |_|                                                                            
-  __         _     _             _       __                              _                                                           
- / /__ _  __| | __| |  _ __ ___ (_)___ __\ \   _ __ ___ _ __   ___  _ __| |_                                                         
-| |/ _` |/ _` |/ _` | | '_ ` _ \| / __/ __| | | '__/ _ \ '_ \ / _ \| '__| __|                                                        
-| | (_| | (_| | (_| | | | | | | | \__ \__ \ | | | |  __/ |_) | (_) | |  | |_                                                         
-| |\__,_|\__,_|\__,_| |_| |_| |_|_|___/___/ | |_|  \___| .__/ \___/|_|   \__|                                                        
- \_\                                     /_/           |_|                                                                           
-;                                                                                                                                    
-                                                                                                                                     
-                                                                                                                                     
-proc sort data=sashelp.class(obs=5 drop=name) out=clsSrt;                                                                            
-  by sex;                                                                                                                            
-run;quit;                                                                                                                            
-                                                                                                                                     
-options missing=' ';                                                                                                                 
-data  clsFix;                                                                                                                        
-  retain wrkCol "";                                                                                                                  
-  set  clsSrt;                                                                                                                       
-  by sex;                                                                                                                            
-  if first.sex then wrkCol="x";                                                                                                      
-  output;                                                                                                                            
-  if wrkCol="x" then call missing(of _all_);                                                                                         
-  output;                                                                                                                            
-run;quit;                                                                                                                            
-                                                                                                                                     
-/*                                                                                                                                   
-Up to 40 obs from CLSFIX total obs=5                                                                                                 
-                                                                                                                                     
-       Working Columns                                                                                                               
-      Do not show on report                                                                                                          
-     ----------------------                                                                                                          
-                                                                                                                                     
-Obs    WRKCOL    WRKCOL2  SEX    AGE    HEIGHT    WEIGHT                                                                             
-                                                                                                                                     
- 1       x          F      F      13     56.5       84.0                                                                             
- 2                  F      F      13     65.3       98.0                                                                             
- 3                  F      F      14     62.8      102.5                                                                             
- 4       x          M      M      14     69.0      112.5                                                                             
- 5                  M      M      14     63.5      102.5                                                                             
-*/                                                                                                                                   
-                                                                                                                                     
-                                                                                                                                     
-ods excel file="d:/xls/class3.xlsx";                                                                                                  
-ods excel options ( sheet_name = "CLASSREPORT");                                                                                     
-                                                                                                                                     
-proc report data=clsFix nowd missing;                                                                                                
-cols  sex  age height weight wrkCol;                                                                                                 
-DEFINE sex / display  ;                                                                                                              
-define wrkCol / noprint;                                                                                                             
-endcomp;                                                                                                                             
-compute wrkCol;                                                                                                                      
-     if wrkCol="x" then call define(_row_, "Style", "Style = [background = yellow]");                                                
-     wrkCol="";                                                                                                                      
-endcomp;                                                                                                                             
-run;quit;                                                                                                                            
-                                                                                                                                     
-ods excel close;                                                                                                                     
-                                                                                                                                     
+*               _         _       _            _                                          
+ ___  ___  _ __| |_    __| | __ _| |_ __ _ ___| |_ ___ _ __                               
+/ __|/ _ \| '__| __|  / _` |/ _` | __/ _` / __| __/ _ \ '_ \                              
+\__ \ (_) | |  | |_  | (_| | (_| | || (_| \__ \ ||  __/ |_) |                             
+|___/\___/|_|   \__|  \__,_|\__,_|\__\__,_|___/\__\___| .__/                              
+                                                      |_|                                 
+  __         _     _             _       __                              _                
+ / /__ _  __| | __| |  _ __ ___ (_)___ __\ \   _ __ ___ _ __   ___  _ __| |_              
+| |/ _` |/ _` |/ _` | | '_ ` _ \| / __/ __| | | '__/ _ \ '_ \ / _ \| '__| __|             
+| | (_| | (_| | (_| | | | | | | | \__ \__ \ | | | |  __/ |_) | (_) | |  | |_              
+| |\__,_|\__,_|\__,_| |_| |_| |_|_|___/___/ | |_|  \___| .__/ \___/|_|   \__|             
+ \_\                                     /_/           |_|                                
+;                                                                                         
+                                                                                          
+                                                                                          
+proc sort data=sashelp.class(obs=5 drop=name) out=clsSrt;                                 
+  by sex;                                                                                 
+run;quit;                                                                                 
+                                                                                          
+options missing=' ';                                                                      
+data  clsFix;                                                                             
+  retain wrkCol "";                                                                       
+  set  clsSrt;                                                                            
+  by sex;                                                                                 
+  if first.sex then wrkCol="x";                                                           
+  output;                                                                                 
+  wrkCol="";                                                                              
+  if last.sex then call missing(of _all_);                                                
+  output;                                                                                 
+run;quit;                                                                                 
+                                                                                          
+                                                                                          
+                                                                                          
+ods excel file="d:/xls/class3.xlsx";                                                      
+ods excel options ( sheet_name = "CLASSREPORT");                                          
+                                                                                          
+proc report data=clsFix nowd missing;                                                     
+cols  sex  age height weight wrkCol;                                                      
+DEFINE sex / display  ;                                                                   
+define wrkCol / noprint;                                                                  
+endcomp;                                                                                  
+compute wrkCol;                                                                           
+     if wrkCol="x" then call define(_row_, "Style", "Style = [background = yellow]");     
+     wrkCol="";                                                                           
+endcomp;                                                                                  
+run;quit;                                                                                 
+                                                                                          
+ods excel close;                                                                          
+                                                                                          
+                                                                                          
+                                                                                                              
                                                                                                                                      
                                                                                                                                      
                                                                                    
